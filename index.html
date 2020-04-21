@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Template • TodoMVC</title>
+		<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
+		<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
+		<!-- CSS overrides - remove if you don't need it -->
+		<link rel="stylesheet" href="css/app.css">
+	</head>
+	<body>
+		<div id="app">
+			<header class="header">todos</header>
+			<div class="content">
+				<span class="icon-down el-icon-arrow-down"
+				v-show="todoLists.length>0"
+				@click="selectAllTodos">
+				</span>
+				<input type="text" class="todos_add" placeholder="What needs to be done?"
+				@keyup.enter="addTodo($event.target)"
+				ref="currentInput">
+				<ul class="content_todoLists">
+					<li v-for="(list,index) in todoLists" class="content_todoList"
+					@mouseover="list.isActive = true"
+					@mouseleave="list.isActive=false"
+					v-show="defaultShow || (whichShow?list.isChecked:!list.isChecked)">
+						<input type="checkbox" class="checkBox" v-model="list.isChecked">
+						<div class="content_todoList_main" @dblclick="toEdit(list)" v-show="!list.isEditing" :class="{deleted:list.isChecked}">
+							{{list.value}}
+						</div>
+						<input type="text" class="content_todoList_main main_input"
+						v-model="list.value"
+						v-show="list.isEditing"
+						v-todo-focus="list.value"
+						@blur="unEdit(list)">
+						<span class="el-icon-close content_todoList_delete" :class="{show: list.isActive}" @click="deleteTodo(index)"></span>
+					</li>
+				</ul>
+				<div class="data" v-show="todoLists.length>0">
+					<div class="data_times" v-show="times === 0">
+						<span>{{times}}</span>&nbspitem left
+					</div>
+					<div class="data_times" v-show="times > 0">
+						<span>{{times}}</span>&nbspitems left
+					</div>
+					<div class="data_status">
+						<a href="#" :class="{active:index === dataStatusIndex}" v-for="(item,index) in dataStatus" @click="switchStatus(index)" :key="index">
+							{{item}}
+						</a>
+					</div>
+					<div class="data_clearTodos" @click="clearTodos" v-show="times < todoLists.length">
+						<a href="#">clear completed</a>
+					</div>
+					<div class="data_clearTodos" @click="clearTodos" v-show="times === todoLists.length">
+						<a href="#"></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Scripts here. Don't remove ↓ -->
+		<script src="node_modules/vue/dist/vue.js"></script>
+		<script src="node_modules/todomvc-common/base.js"></script>
+		<script src="js/app.js"></script>
+	</body>
+</html>
